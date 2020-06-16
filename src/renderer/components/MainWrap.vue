@@ -1,19 +1,16 @@
 <template>
   <div id="wrapper">
-    <div style="cover" id="drag">
-      <img
-        class="coverPic"
-        :style="{opacity: form.opacity / 100}"
-        :src="form.path"
-        alt
-      />
+    <div class="cover" id="drag" @click="isSlideOpen = true">
+      <img class="coverPic" :style="{opacity: form.opacity / 100}" :src="form.path" alt />
     </div>
+    <el-dialog title="设置" :visible.sync="isSlideOpen" class="dialog" width="90%" >
     <div class="tool">
       <el-form ref="form" :model="form" label-width="80px">
         <el-upload
           class="upload"
           drag
           action=""
+          :show-file-list="false"
           :http-request="this.handlePic"
         >
           <i class="el-icon-upload"></i>
@@ -21,11 +18,7 @@
             将文件拖到此处，或
             <em>点击上传</em>
           </div>
-          <!-- <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div> -->
         </el-upload>
-        <el-form-item label="尺寸">
-          <el-input v-model="form.name"></el-input>
-        </el-form-item>
         <el-form-item label="透明度">
           <div class="slider-box">
             <el-slider v-model="form.opacity" class="slide-tool"></el-slider>
@@ -34,6 +27,8 @@
         </el-form-item>
       </el-form>
     </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -42,6 +37,7 @@ export default {
   name: "MainWrap",
   data() {
     return {
+      isSlideOpen: true,
       form: {
         path: "",
         opacity: 50,
@@ -59,8 +55,8 @@ export default {
       this.$electron.shell.openExternal(link);
     },
     handlePic(e) {
-      console.log(e.file.path);
-      this.form.path = 'file://' + e.file.path;
+      this.isSlideOpen = false;
+      this.form.path = "file://" + e.file.path;
     }
   }
 };
@@ -76,32 +72,38 @@ export default {
 }
 
 body {
-  font-family: "Source Sans Pro", sans-serif;
-  /* background: transparent; */
 }
 
 #wrapper {
-  /* background: transparent; */
   height: 100vh;
-  width: 100vw;
-  /* opacity: 0; */
+  width: 100%;
   border: 1px solid rgb(170, 128, 128);
-  display: flex;
+}
+
+div.dialog {
+  margin-top: 0 !important;
+}
+
+.drawer {
+  /* background: #fff; */
 }
 
 .cover {
-  flex: 1;
+  width: 100%;
+  height: 100%;
 }
 .tool {
-  width: 500px;
-  opacity: 1;
-  background: #fff;
   padding: 20px;
-  border: 1px solid #2c3e50;
 }
 
 .upload {
   margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.upload .el-upload-dragger {
+  width: 200px;
 }
 .slider-box {
   display: flex;
@@ -111,8 +113,6 @@ body {
   width: 100px;
   margin-right: 20px;
 }
-
-
 
 .coverPic {
   width: 100%;

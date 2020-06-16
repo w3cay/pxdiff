@@ -12,6 +12,6 @@
 
 <style>
  #app {
-    /* background: transparent; */
+    background: transparent;
  }
 </style>

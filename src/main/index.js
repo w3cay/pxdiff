@@ -20,6 +20,8 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     useContentSize: true,
     transparent: true,
+    width: 375,
+    minWidth: 375,
     backgroundColor: '#00FFFFFF',
     webPreferences: {
       webSecurity: false
